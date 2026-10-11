@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffe7f3">
+<title>公主的注音魔法九宮格</title>
+<style>
+:root{--pink:#f3a0c8;--pink-light:#fff0f7;--purple:#a995e7;--purple-light:#f3efff;--deep:#91456f;--ink:#553d53;--green:#25855d;--line:#f0c2da}
+*{box-sizing:border-box}body{margin:0;padding:14px;background:radial-gradient(circle at 8% 8%,#fff 0 3%,transparent 24%),linear-gradient(145deg,#fff1f8,#f5efff 58%,#fff8ef);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);min-height:100vh}
+main{max-width:900px;margin:auto}header{text-align:center;padding:8px 4px 18px}.crown{font-size:38px}h1{font-size:clamp(25px,5vw,38px);margin:2px 0 5px;color:var(--deep)}header p{margin:0;color:#896b85;font-size:14px}
+.panel{background:#ffffffdf;border:2px solid #f6c8df;border-radius:26px;padding:clamp(14px,3vw,25px);box-shadow:0 12px 36px #a85d8815}
+.stats{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}.pill{font-size:13px;font-weight:800;color:#935179;background:#fff0f7;border:1px solid #f5c8df;border-radius:30px;padding:8px 12px}
+.progress{height:8px;background:#f5e0ed;border-radius:20px;margin:13px 0 17px;overflow:hidden}.progress>div{height:100%;width:0;background:linear-gradient(90deg,#f09bc4,#ad9aee);transition:width .25s}
+.prompt{background:linear-gradient(120deg,#fff0f7,#f5f0ff);border-radius:20px;padding:17px 14px;text-align:center;min-height:125px;display:flex;flex-direction:column;justify-content:center}
+.kicker{font-size:12px;color:#a07998;margin-bottom:5px}#question{font-size:clamp(21px,4.5vw,29px);font-weight:900;line-height:1.45;color:#723f7a}#subtext{font-size:13px;color:#9a7b96;margin-top:7px}
+.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(185px,.8fr);gap:16px;margin-top:17px;align-items:stretch}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:470px;width:100%;margin:auto}
+.cell{aspect-ratio:1;min-width:0;border:2px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#fff,#fff0f7);color:#683f6b;font-size:clamp(32px,7vw,52px);font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #f0d3e3;cursor:pointer;transition:transform .12s,background .12s;user-select:none}
+.cell:active{transform:translateY(3px);box-shadow:0 1px 0 #f0d3e3}.cell:focus-visible,button:focus-visible{outline:3px solid #8f72d4;outline-offset:3px}.cell.good{background:#e4fff0;border-color:#71c69c;box-shadow:0 4px 0 #b8e6cd}.cell.hint{background:#fff6ce;border-color:#e8c25e}.cell.bad{background:#fff0f2;border-color:#ed8ba5;animation:shake .2s}@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.aside{background:#fff8fc;border:1.5px dashed #eab7d4;border-radius:21px;padding:15px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:9px}.princess{font-size:56px;line-height:1}.aside h3{margin:0;color:#a34e83;font-size:17px}.aside p{font-size:13px;line-height:1.65;margin:0;color:#826a80}
+button{font:inherit;cursor:pointer;border:0;border-radius:30px;padding:11px 15px;font-weight:800;transition:transform .12s}button:active{transform:scale(.97)}.primary{background:linear-gradient(110deg,#ef99c2,#aa99e9);color:#fff;box-shadow:0 4px 0 #d8acd7}.secondary{background:white;color:#95527c;border:1px solid #ecc4da}.btnrow{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:16px}.feedback{min-height:42px;text-align:center;font-weight:800;line-height:1.5;color:#8b4d82;margin-top:12px}.smallnote{text-align:center;font-size:12px;color:#a18ba0;margin:14px 0 3px}.hide{display:none!important}.modal{display:none;position:fixed;inset:0;background:#54304877;align-items:center;justify-content:center;padding:18px;z-index:5}.modal.open{display:flex}.modalbox{background:#fffafd;border:2px solid #f5c5df;border-radius:25px;padding:23px;max-width:450px;width:100%;text-align:center;box-shadow:0 20px 60px #49243b44}.modalbox h2{color:#a83d78}.modalbox p{text-align:left;line-height:1.8;font-size:14px}
+@media(max-width:620px){body{padding:9px}.layout{grid-template-columns:1fr}.aside{display:grid;grid-template-columns:auto 1fr;text-align:left;padding:11px}.princess{grid-row:span 2;font-size:48px}.aside h3{align-self:end}.aside p{align-self:start}.aside button{grid-column:1/-1;justify-self:center}.grid{max-width:420px}.cell{border-radius:14px}.stats{justify-content:center}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="crown">👑 ✨</div><h1>公主的注音魔法九宮格</h1><p>聽清楚、找一找，收集你的魔法星星！</p></header>
+<section class="panel">
+ <div class="stats"><span class="pill" id="round">第 1 題</span><span class="pill" id="score">⭐ 星星 0</span><span class="pill" id="level">第 1 關・方向小新手</span></div>
+ <div class="progress"><div id="bar"></div></div>
+ <div class="prompt"><div class="kicker">👂 公主的語音任務</div><div id="question">準備開始魔法挑戰！</div><div id="subtext">按「聽題目」聽清楚指令，再點選答案。</div></div>
+ <div class="layout">
+  <div class="grid" id="grid" aria-label="注音九宮格"></div>
+  <aside class="aside"><div class="princess">👸🏻</div><h3>公主小提示</h3><p id="tip">先找到題目指定的注音，再想一想方向。九宮格的左邊，就是你看到畫面時的左邊喔！</p><button class="secondary" id="listen">🔊 聽題目</button></aside>
+ </div>
+ <div class="feedback" id="feedback" aria-live="polite">準備好了嗎？點選「聽題目」開始！</div>
+ <div class="btnrow"><button class="secondary" id="repeat">🔁 再聽一次</button><button class="primary" id="next">下一題 ✨</button><button class="secondary" id="help">遊戲說明</button></div>
+</section>
+<div class="smallnote">每 5 題更換注音組合｜答錯會有提示｜答對才會進入下一題</div>
+</main>
+<div class="modal" id="modal"><div class="modalbox"><div style="font-size:40px">💗</div><h2>怎麼玩呢？</h2><p>1. 仔細聽公主唸出的指令。<br>2. 在九宮格中先找到指定注音，再判斷上、下、左、右或斜角方向。<br>3. 前 5 題練習單一步驟；之後會慢慢加入兩步驟、三步驟任務。<br>4. 答錯時會給提示，不會直接扣分；答對可獲得星星。<br>5. 每 5 題會換一組九宮格，37 個注音會輪流出現。<br><br>如果沒有聲音，請檢查裝置音量並按「聽題目」。部分瀏覽器需要先點一下按鈕才允許語音播放。</p><button class="primary" id="close">我知道了！</button></div></div>
+<script>
+"use strict";
+const SYMBOLS=Array.from("ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄧㄨㄩㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ");
+const DIRS=[
+ {name:"上面",dr:-1,dc:0},{name:"下面",dr:1,dc:0},{name:"左邊",dr:0,dc:-1},{name:"右邊",dr:0,dc:1},
+ {name:"左上方",dr:-1,dc:-1},{name:"右上方",dr:-1,dc:1},{name:"左下方",dr:1,dc:-1},{name:"右下方",dr:1,dc:1}
+];
+let board=[],questionNo=1,stars=0,question=null,locked=false,boardVersion=0,usedSymbols=new Set(),voiceReady=false;
+const $=id=>document.getElementById(id);
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function neighbors(index){const r=Math.floor(index/3),c=index%3;return DIRS.map(d=>({...d,index:(r+d.dr)*3+c+d.dc})).filter(d=>r+d.dr>=0&&r+d.dr<3&&c+d.dc>=0&&c+d.dc<3)}
+function buildBoard(){
+ // Shuffle all 37 symbols, but preferentially include symbols not yet seen in recent boards.
+ const unseen=SYMBOLS.filter(s=>!usedSymbols.has(s));
+ const chosen=shuffle(unseen).slice(0,Math.min(9,unseen.length));
+ if(chosen.length<9){const rest=shuffle(SYMBOLS.filter(s=>!chosen.includes(s)));chosen.push(...rest.slice(0,9-chosen.length))}
+ board=shuffle(chosen);boardVersion++;
+ board.forEach(s=>usedSymbols.add(s));
+ if(usedSymbols.size>=SYMBOLS.length)usedSymbols.clear();
+ renderBoard();
+}
+function renderBoard(){const root=$("grid");root.innerHTML="";board.forEach((s,i)=>{const b=document.createElement("button");b.type="button";b.className="cell";b.textContent=s;b.setAttribute("aria-label","第"+(Math.floor(i/3)+1)+"列第"+(i%3+1)+"格，"+s);b.onclick=()=>answer(i);root.appendChild(b)})}
+function levelInfo(n){if(n<=5)return {name:"方向小新手",steps:1};if(n<=10)return {name:"方向小公主",steps:1};if(n<=15)return {name:"雙重魔法",steps:2};if(n<=20)return {name:"記憶魔法師",steps:2};return {name:"三重魔法挑戰",steps:3}}
+function makeQuestion(){
+ locked=false;document.querySelectorAll(".cell").forEach(c=>c.className="cell");
+ if((questionNo-1)%5===0){buildBoard()}
+ const level=levelInfo(questionNo);let start=Math.floor(Math.random()*9),path=[start],steps=[];
+ for(let k=0;k<level.steps;k++){
+   let opts=neighbors(path[path.length-1]);
+   // In multi-step tasks, avoid immediate backtracking when another option exists.
+   if(path.length>1&&opts.length>1){const prev=path[path.length-2];const filtered=opts.filter(o=>o.index!==prev);if(filtered.length)opts=filtered}
+   const d=opts[Math.floor(Math.random()*opts.length)];steps.push(d);path.push(d.index);
+ }
+ const firstSymbol=board[start];
+ let instruction="";
+ if(level.steps===1){
+   instruction=`請問「${firstSymbol}」的${steps[0].name}是什麼注音？`;
+ }else{
+   const parts=[`先找到「${firstSymbol}」`];
+   steps.forEach((d,i)=>{parts.push(i===0?`再找它${d.name}的注音`:`接著找剛剛找到的注音${d.name}的注音`)});
+   instruction=parts.join("，") + "。請點出最後找到的注音。";
+ }
+ question={start,path,steps,answer:path[path.length-1],instruction,level};
+ $("question").textContent=instruction;
+ $("subtext").textContent=level.steps===1?"先定位注音，再判斷方向。":`這題有 ${level.steps} 個方向步驟，記得一步一步想！`;
+ $("round").textContent=`第 ${questionNo} 題`;
+ $("score").textContent=`⭐ 星星 ${stars}`;
+ $("level").textContent=`第 ${Math.ceil(questionNo/5)} 關・${level.name}`;
+ $("bar").style.width=((questionNo-1)%5+1)*20+"%";
+ $("feedback").textContent="聽清楚指令後，點選你認為正確的注音。";
+ $("tip").textContent=level.steps===1?"先找到題目中的注音，再看它的方向。":`小祕訣：記住每一步找到的注音，下一步要從「剛剛找到的那個」繼續找。`;
+}
+function speak(text){
+ if(!("speechSynthesis" in window)){ $("feedback").textContent="這個瀏覽器不支援語音，請使用「看題目」閱讀文字指令。";return}
+ window.speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);u.lang="zh-TW";u.rate=.78;u.pitch=1.12;
+ const voices=window.speechSynthesis.getVoices();const zh=voices.find(v=>/zh-TW|cmn-TW/i.test(v.lang))||voices.find(v=>/^zh/i.test(v.lang));if(zh)u.voice=zh;
+ window.speechSynthesis.speak(u);
+}
+function showHint(){
+ const cells=[...document.querySelectorAll(".cell")];
+ if(question.steps.length===1){
+   cells[question.start].classList.add("hint");
+   $("feedback").textContent=`提示：先找到「${board[question.start]}」，再看它的${question.steps[0].name}。`;
+ }else{
+   cells[question.start].classList.add("hint");
+   $("feedback").textContent=`提示：第一步先找到「${board[question.start]}」。${question.steps.length>1?"記得每一步都從上一個找到的注音繼續。":""}`;
+ }
+}
+function answer(i){
+ if(locked)return;
+ if(i===question.answer){
+   locked=true;document.querySelectorAll(".cell")[i].classList.add("good");stars++;
+   $("score").textContent=`⭐ 星星 ${stars}`;
+   $("feedback").textContent=["答對了！公主送你一顆星星！🌟","太棒了！你聽懂每一步了！💖","答對啦！你是方向小高手！👑"][Math.floor(Math.random()*3)];
+   $("tip").textContent="好棒！準備好就按「下一題」，挑戰新的魔法任務吧！";
+ }else{
+   const cell=document.querySelectorAll(".cell")[i];cell.classList.add("bad");
+   $("feedback").textContent="差一點點！再聽一次，先找指定注音，再慢慢確認方向。";
+   showHint();cell.classList.add("bad");
+   setTimeout(()=>cell.classList.remove("bad"),550);
+ }
+}
+function next(){
+ if(!locked){$("feedback").textContent="先完成這一題，答對後就可以繼續囉！";return}
+ questionNo++;makeQuestion();
+}
+$("listen").onclick=()=>speak(question.instruction);
+$("repeat").onclick=()=>speak(question.instruction);
+$("next").onclick=next;
+$("help").onclick=()=> $("modal").classList.add("open");
+$("close").onclick=()=> $("modal").classList.remove("open");
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("modal").classList.remove("open")});
+buildBoard();makeQuestion();
+</script>
+</body>
+</html>
